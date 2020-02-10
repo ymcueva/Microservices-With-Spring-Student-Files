@@ -1,16 +1,18 @@
 ## Lab 0 - Setup
 
-1. [Download](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html) and install the latest release of the Java JDK.  The lab instructions have been tested with Java 7 and 8, so if you already have one of these installed you should be fine.
-2. [Download](https://maven.apache.org/download.cgi) and install Maven 2 or greater if you do not already have it.
-3. Download and install an IDE if you wish to use one.  The lab instructions are written for [Spring Tool Suite](https://spring.io/tools/sts/all), but you can use regular Eclipse, IntelliJ, or another IDE if desired.  You can also work on all exercises without any IDE if you prefer.
-4. Create a [Github](https://github.com) account, or be prepared to create a repository using another Git account that you already have access to.
-5. Download Files from [https://github.com/kennyk65/Microservices-With-Spring-Student-Files](https://github.com/kennyk65/Microservices-With-Spring-Student-Files) (Use download ZIP, or Clone in Desktop, whichever you prefer)
-6. Import all of the downloaded Maven projects into your IDE.
-7. Optional - Find and install a REST plugin for the web browser that you would like to use for this course.  For example, I use "Simple REST Client" in Chrome.
+1. [Descargar](https://adoptopenjdk.net/) Java e instalar la versión 11 de Open JDK HotSpot u Open J9.
+2. [Descargar](https://maven.apache.org/download.cgi) e instalar Maven en tu maquina y colocarlo en tu path. 
+3. Descargar el IDE que tu prefieras.  Pero te recomendamos el [Intellij IDEA](https://www.jetbrains.com/idea/).
+4. Create una cuenta de [Github](https://github.com) si no la tienes. Vas a usar una cuenta de Github en los laboratorios.
+5. Forkea (Ojo no clonar) el repositorio de [https://github.com/joedayz/Microservices-With-Spring-Student-Files](https://github.com/joedayz/Microservices-With-Spring-Student-Files). Esto te permitirá luego hacer cambios sobre dicho repositorio.
+6. Optional - Instalate Postman, o usa curl o [HTTPie](https://httpie.org/). 
 
-Notice that:
-- Not all subfolders within the student files contain Maven projects.  Some contain the lab instructions, such as this document that your are reading now.
-- Projects are grouped by lab #, each corresponding to a module in the course.
-- Projects suffixed with “solution” are intended to illustrate the completed version of each lab.  Try to complete each lab without peeking at the solutions, but if you get stuck they are available to you.
+Notas:
+- No todos los directorios contienen proyectos Maven.  Algunos contienen instrucciones de laboratorio,  como este documento que estas leyendo.
+- Los proyectos son agrupados por laboratorio #, cada uno es sobre un tema en particular de Spring cloud.
+- Los proyectos en el directorio "atico" son versiones de Spring Cloud pasadas. En el momento de la creación el autor las hizo con Dalston Release. 
+- Los proyetos en el directorio "start" son las versiones que tu deberás trabajar en cada laboratorio sobre un tema específico de Spring Cloud.
+- Los proyectos en el directorio “solution” son la versión final del laboratorio. A la fecha (Febrero 2020) con la versión HOXTON.  Trata de probar cada laboratorio y no saltarte a la versión solution para que aprendas los detalles. Esta última versión ha subrido cambios y todos los proyectos Boot son con versión 2.2.X RELEASE.
+
 
 

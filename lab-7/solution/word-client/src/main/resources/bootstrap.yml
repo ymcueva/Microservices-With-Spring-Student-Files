@@ -1,0 +1,53 @@
+---
+
+spring:
+  cloud:
+    config:
+      uri: http://localhost:8001
+
+# Items that apply to ALL profiles:
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://eurekahost:8010/eureka/
+  #      defaultZone: http://localhost:8011/eureka/,http://localhost:8012/eureka/,http://localhost:8013/eureka/
+
+  # Allow Eureka to recognize two apps of the same type on the same host as separate instances:
+  instance:
+    instanceId: ${spring.cloud.client.hostname}:${spring.application.name}:${spring.application.instance_id:${random.value}}
+
+
+server:
+  port: ${PORT:${SERVER_PORT:0}}   # Select any available port if neither port nor server port are specified.
+
+
+
+---
+spring:
+  profiles: subject
+  application:
+    name: subject
+
+---
+spring:
+  profiles: verb
+  application:
+    name: verb
+
+---
+spring:
+  profiles: article
+  application:
+    name: article
+
+---
+spring:
+  profiles: adjective
+  application:
+    name: adjective
+
+---
+spring:
+  profiles: noun
+  application:
+    name: noun
