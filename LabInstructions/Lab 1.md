@@ -1,193 +1,192 @@
 ## Lab 1 - Spring Boot
 
-- In this exercise you will create a simple Spring Boot application.  If you feel you already have a good understanding of Spring Boot you can skip this exercise.  All other exercises in this course will assume you know Spring Boot.
+- En este ejercicico creamos una aplicación Spring Boot. Si ya conoces Spring Boot saltate este ejercicio. Todos los laboratorio siguientes asumen que conoces Spring Boot.
 
 **Part 1 - Simple Web Application**
 
-1.  Using either Spring Tool Suite, or [https://start.spring.io](https://start.spring.io), create a new Spring Boot Project.
-  - Use either Maven or Gradle (if you have it installed).  All lab instructions are based on Maven.
-  - Use the latest stable releases of Boot and Java.  These instructions were originally tested with Java 1.8, Boot 1.5.1.RELEASE.
-  - Use JAR packaging for now, unless you prefer WAR and already have a local server (like Tomcat) installed and ready to run it.
-  - Use any values you like for group, artifact, package, description, etc.
-  - Select the following dependencies: Web, Thymeleaf, JDBC, JPA, HSQLDB, Actuator.
+1.  Usando Intellij IDEA, o [https://start.spring.io](https://start.spring.io), crearemos un nuevo proyecto Spring Boot.
 
-2.  Create a new Controller in the base package:
-  - Name the controller anything you like.  
-  - Annotate the Controller with @Controller.
+- Usa Maven. Todas las instrucciones estan hechas para Maven.
+- Usa la última versión estable de Boot y Java. Estas instrucciones han sido testeadas con Java 11, Boot 2.2.4.RELEASE.
+- Usa JAR packaging por ahora. No usaremos Tomcat ni otro contenedor de servlets.
+- Usa cualquier valor que gustes para group, artifact, package, description, etc.
+- Selecciona las siguientes dependencias: Web, Thymeleaf, JPA, H2, Actuator.
 
-3.  Create a new method in the controller:
-  - Name the method anything you like.  Have it return a String.  No parameters needed.
-  - Annotate the method with @RequestMapping("/")
-  - Have the method return the String value "hello".
+2.  Crea un nuevo Controller debajo del paquete base y en el subpaquete controller:
 
-4.  If not already present, create a new folder under src/main/resources called "templates"
+- Ponle el nombre del Controller como gustes. Sugerencia <Name>Controller, donde <Name> puede ser: Index, Home, Inicio, etc.
+- Decora el Controller con la anotación @Controller.
 
-5.  Create a new file in the templates folder called "hello.html".  Place the words "Hello from Thymeleaf" (or any markup you like) within the file.
+3.  Crea un nuevo método en la controladora:
 
-6.  Save all your work.  Run your application.
-  - If you are working in Spring Tool Suite, simply right-click on the application / Run As / Spring Boot App.
-  - If you are working in another IDE, Run the main method found within the main Application class.  
-  - If you wish to run from a command prompt, from the application's root folder run mvn spring-boot:run. 
-  
-7.  Open a browser to [http://localhost:8080/](http://localhost:8080/).  You should see your web page.
+- Nombra el método como gustes. Este debe retornar un String. No se necesita parámetros.
+- Anota el método con @RequestMapping("/") o @GetMapping("/).
+- El método debe retornar el String "hello".
 
+4.  Si es que no esta presente, crear un nuevo directorio bajo src/main/resources denominado "templates"
 
-  **Part 2 - Return a RESTful Response**
-  
-9.  Create a new Java class called "Team" in the base package.  Give it a Long field for id, and String fields for name, location, and mascot (or whatever other properties you like).  Generate "getters and setters" for all fields. Save your work.
+5.  Crea un nuevo archivo en el directorio templates denominado "hello.html". Coloca la frase "Hello from Thymeleaf" (o lo que tu quieras) al interior del archivo.
 
-10.  Create a new Controller called "TeamController".  Annotate it with @RestController.
+6.  Guarda todo tu trabajo. Ejecuta tu aplicación.
 
-11.  Create a new method in the TeamController.
-  - Name the method "getTeams".  Have it return a List of Team objects.  
-  - Annotate the method with @RequestMapping("/teams")
-  - Have the method create a List of Team objects.  Create one or more Team objects and add it to the list.  Set the teams' properties to whatever values you like, and return the List.  Sample:
-  ```
-	@RequestMapping("/teams")
-	public List<Team> getTeams() {
-		List<Team> list = new ArrayList<>();
+- Usa las opciones disponibles que hay en Intellij IDEA o las que tengas disponible en el IDE que estes usando.
+- Si deseas ejecutarlo desde un command prompt, desde el dirctorio raíz de la aplicación ejecuta mvn spring-boot:run.
 
-		Team team = new Team();
-		team.setId(0l);
-		team.setLocation("Harlem");
-		team.setName("Globetrotters");
-		list.add(team);
-		
-		team = new Team();
-		team.setId(1l);
-		team.setLocation("Washington");
-		team.setName("Generals");
-		list.add(team);
-		
-		return list;
-	}
+7.  Abre un navegador y ve a [http://localhost:8080/](http://localhost:8080/). Tu deberías ver tu pagina web.
 
-  ```
+**Part 2 - Retornar un RESTful Response**
 
-12.  Save all work.  Stop the application if it is already running, and start it again.  Open [http://localhost:8080/teams](http://localhost:8080/teams).  You should see a JSON response with your teams' data.
+9.  Crea una nueva clase llamada "Team" en el paquete base. Crea las siguientes propiedades o atributos: Long id, String name, location, y mascot (o las propiedades que desees). Genera los "getters and setters" para todos los campos. Salva tu trabajo.
 
-  **Part 3 - Create Spring Data JPA Repositories**
-  
-13.  Return to the Team class.  Add required JPA annotations:  The class must be annotated with @Entity, the id must be annotated with @Id and @GeneratedValue.
+10. Crea una nueva Controladora denominada "TeamController". Anota esta con @RestController.
 
-14.  Create a new Interface called "TeamRepository".  Have it extend CrudRepository<Team,Long>.
-  - Be sure to create this as an Interface, not a Class!
-  
-15.  Open the application's main configuration / launch class (the one annotated with @SpringBootApplication).  Use @Autowired to dependency inject a member variable of type TeamRepository.  Name the variable anything you like (may I suggest: "teamRepository").
+11. Crea un nuevo método en TeamController.
 
-16.  Add some logic to initially populate the database:  Add a public void init() method.  Annotate it with @PostConstruct.  Cut and paste the team-creation code from you controller to this method, except rather than returning a List of Teams, call the save() method on the repository.  Also, remove any values set for the team IDs.  Example code:
-  ```
-    public void init() {
-		List<Team> list = new ArrayList<>();
+- Coloca como nombre de método "getTeams". Este debe retornar una Lista de objetos Team.
+- Anota el método con @RequestMapping("/teams") o @GetMapping("/teams").
+- Coloca el siguiente cuerpo al método:
 
-		Team team = new Team();
-		team.setLocation("Harlem");
-		team.setName("Globetrotters");
-		list.add(team);
-		
-		team = new Team();
-		team.setLocation("Washington");
-		team.setName("Generals");
-		list.add(team);
+```
+@RequestMapping("/teams")
+public List<Team> getTeams() {
+List<Team> list = new ArrayList<>();
 
-		teamRepository.save(list);
-	}    
-  ```
+Team team = new Team();
+team.setId(0l);
+team.setLocation("Harlem");
+team.setName("Globetrotters");
+list.add(team);
 
-17.  Return to the TeamController.  Use @Autowired to dependency inject a TeamRepository variable.  Name the variable anything you like (may I suggest: "teamRepository").
+team = new Team();
+team.setId(1l);
+team.setLocation("Washington");
+team.setName("Generals");
+list.add(team);
 
-18.  Alter the logic in your controller method to simply return the result of the repository's findAll() method:
-  ```
-	@RequestMapping("/teams")
-	public Iterable<Team> getTeams() {
-		return teamRepository.findAll();
-	}
-  ```
-19.  Save all work.  Stop the application if it is already running, and start it again.  Open [http://localhost:8080/teams](http://localhost:8080/teams).  You should see a JSON response with your teams' data.
+return list;
+}
 
+```
 
-  **Part 4 (Optional)- Create a Single Team endpoint**
-  
-20.  Return to the TeamController and add a method that returns a single Team given an ID.
-  - Name the method anything you like.  Suggestion: getTeam.
-  - Return type should be a Team.
-  - Use a @RequestMapping annotation to map this method to the "/teams/{id}" pattern.
-  - Define a parameter named "id" of type Long annotated with @PathVariable.
-  - Logic: return the result of the teamRepository's findOne() method.
+12. Guarda todo tu trabajo. Deten la aplicación si ya se esta ejecutando, e inicia este nuevamente. Abre [http://localhost:8080/teams](http://localhost:8080/teams). Tu deberías ver un JSON response con la data de tus teams.
 
-19.  Save all work.  Stop the application if it is already running, and start it again.  Use [http://localhost:8080/teams](http://localhost:8080/teams) to note the generated ID values for each Team.  Then use URLs such as  [http://localhost:8080/teams/1](http://localhost:8080/teams/1) or [http://localhost:8080/teams/2](http://localhost:8080/teams/2) to get results for the individual teams.
+**Part 3 - Crear Spring Data JPA Repositories**
 
-  
-  **Part 5 - Add Players**
+13. Retorna a la clase Team. Agrega las anotaciones JPA requeridas: La clase debe ser anotada con @Entity, el id debe ser anotado con @Id y @GeneratedValue.
 
-20.  Add a new class named Player.  Add fields for id, name, and position.  The id should be Long, and other fields can be Strings.  Generate getters / setters for each field.  Add an @Entity annotation on the class, and @Id and @GeneratedValue annotations on the id.   You may wish to add a custom constructor to make it easy to create a Player object by supplying name and position Strings.  (If you do this, be sure to retain a default constructor).  Save your work.
+14. Crear una nueva interface denominada "TeamRepository". Hacer que extienda de CrudRepository<Team,Long>.
 
-21.  Open the Team class.  Add a Set of Player objects named players.  Generate getters and setters.  Annotate the set with 	@OneToMany(cascade=CascadeType.ALL) and @JoinColumn(name="teamId"). You may wish to add a custom constructor to make it easy to create a Team object by supplying name, location, and Set of Players.  (If you do this, be sure to retain a default constructor).  Save your work.
+15. Abre la clase Application (anotada con @SpringBootApplication). Usa @Autowired para inyectar una instancia de TeamRepository. Coloca el nombre que gustes a la propiedad en cuestión (sugiero: "teamRepository").
 
-22.  Return to application's main configuration / launch class and alter the team population logic to add some players to each team.  Here is an example implementation:
+16. Agrega algo de lógica para poblar la base de datos: Agrega un método public void init(). Anota este con @PostConstruct. Ejemplo de código:
 
-  ```
-    @PostConstruct
-	public void init() {
-		List<Team> list = new ArrayList<>();
+```
+  public void init() {
+List<Team> list = new ArrayList<>();
 
-		Set<Player> set = new HashSet<>();
-		set.add(new Player("Big Easy", "Showman"));
-		set.add(new Player("Buckets", "Guard"));
-		set.add(new Player("Dizzy", "Guard"));
-		
-		list.add(new Team("Harlem", "Globetrotters", set));
-		list.add(new Team("Washington","Generals",null));
+Team team = new Team();
+team.setLocation("Harlem");
+team.setName("Globetrotters");
+list.add(team);
 
-		teamRepository.save(list);
-	}   
-  ```
+team = new Team();
+team.setLocation("Washington");
+team.setName("Generals");
+list.add(team);
 
-23.  Save all work.  Restart the application.  Open [http://localhost:8080/teams](http://localhost:8080/teams) to see the players.
+teamRepository.save(list);
+}
+```
 
+17. Retorna a el TeamController. Usa @Autowired para inyectar una variable de tipo TeamRepository. Colocale el nombre que quieras (sugiero: "teamRepository").
 
-  **Part 6 - Add Spring Data REST**
-24.  Open the project's POM.  Add a dependency for group org.springframework.boot and artifact spring-boot-starter-data-rest.  Save your work.
+18. Modifica la logica en tu controladora para retornar el resultado de tu repositorio con findAll():
 
-25.  Open TeamRepository.  Add a @RestResource(path="teams", rel="team") annotation to the interface.
+```
+@RequestMapping("/teams")
+public Iterable<Team> getTeams() {
+return teamRepository.findAll();
+}
+```
 
-26.  Create a new Interface called "PlayerRepository".  Have it extend CrudRepository<Player,Long>.  (Be sure to create this as an Interface, not a Class)!  Add a @RestResource(path="players", rel="player") annotation to the interface.
+19. Guarda todo tu trabajo. Deten la aplicación si ya esta ejecutandose, e inicia esta nuevamente. Abre [http://localhost:8080/teams](http://localhost:8080/teams). Tu deberías ver un JSON response con la data de los teams.
 
-27.  Open TeamController.  Comment out the @RestController annotation on the class.  (We will be using Spring Data REST to implement the controller, so we don't want this existing controller to interfere).
+**Part 4 (Opcional)- Crear un Single Team endpoint**
 
-28.  Save all work.  Restart the application.  Open [http://localhost:8080/teams](http://localhost:8080/teams) to see the players.  Note that (depending on the browser you are using) you can navigate the links for players and teams.
+20. Retornar a la clase TeamController y agregar un método que retorna un simple Team dado un ID.
 
-  If you have reached this point, Congratulations, you have finished the exercise!
+- Colocale el nombre que gustes. Sugerimos: getTeam.
+- El tipo de retorno debe ser Team.
+- Usa un @RequestMapping o @GetMapping con el patrón "/teams/{id}".
+- Define un parámetro denominado "id" de tipo Long anotado con @PathVariable.
+- Logica: retorna el resultado del teamRepository's findById().
 
-  **Part 7 (Optional) - Explore the Actuator Endpoints**
+19. Guarda todo tu trabajo. Deten tu aplicación y vuelve a ejecutarla. Usa [http://localhost:8080/teams](http://localhost:8080/teams) para ver los ID generados por cada Team. Luego usa estos urls [http://localhost:8080/teams/1](http://localhost:8080/teams/1) o [http://localhost:8080/teams/2](http://localhost:8080/teams/2) para obtener los resultados de cada teams de forma individual.
 
-29.  One of the dependencies we specified was Actuator.  It automatically adds some useful endpoints to our web application.  Open the following with a browser:
-  - [/info](http://localhost:8080/info)
-  - [/health](http://localhost:8080/health)
+**Part 5 - Agregar Players**
 
-30.  Notice that some other actuator endpoints are not enabled by default.  Try the following - they won't work, but take a close look at the reason why - exposing these could be a security risk:
-  - [/beans](http://localhost:8080/beans)
-  - [/configprops](http://localhost:8080/configprops)
-  - [/autoconfig](http://localhost:8080/autoconfig)
+20. Agregar una nueva clase Player. Agregar las propiedades id, name, y position. El id debería ser Long, y los otros campos pueden ser Strings. Generar getters / setters para cada campo. Agrega una anotación @Entity en la clase, y @Id y @GeneratedValue en el id. Agrega un constructor sin argumentos y otro con argumentos para crear un objeto Player proporcionando su name y position. Guarda tu trabajo.
 
-31.  Enable these actuator endpoints by modifying your POM: Add a dependency for group org.springframework.boot and artifact spring-boot-starter-security.  Save your work and restart.   Look at the console output for "default security password".  Copy this randomly-generated password, then browse to endpoints listed above, using "user" for username and paste the value for password.  (Note that this password will regenerate on each restart, set security.user.name and security.user.password to establish static values).
- 
-32.  Explore [/mappings](http://localhost:8080/mappings).  Does it show you any other useful endpoints you would like to try?
+21. Abre la clase Team. Agrega un Set de objetos Player denominado players. Genera getters y setters. Anota el set con @OneToMany(cascade=CascadeType.ALL) y @JoinColumn(name="teamId"). Crea un constructor sin argumentos y con argumentos con name, location, y Set de Players. Guarda tu trabajo.
 
-  **Part 8 (Optional) - DevTools**
-  
-33.  Often while developing we need to run an application, then make some changes, then restart.  The Spring Boot "DevTools" dependency can make things easier by automatically restarting when changes are detected  (though it is not as full-featured as other tools like JRebel).  Add the following dependency: 
+22. Retorna a la clase Application y modifica la lógica de creación de teams inicial para agregarle algunos players a cada team. Ejemplo:
 
-  ```
-    <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-devtools</artifactId>
-        <optional>true</optional>
-    </dependency>  
-  ```
-  
-34.  While your application is running, make a small, innocent change to some code (like a comment or spacing).  Observe that depending on the change, DevTools will restart your application.  
+```
+  @PostConstruct
+public void init() {
+List<Team> list = new ArrayList<>();
 
-Tips:
-- When running in Eclipse or STS, you can get automatic hot-swapping of many code changes without DevTools if you "debug" the application rather than "run" it.
-- If you encounter unusual issues in the upcoming labs, it may be useful to remove the DevTools dependency to see if the problem persists.
+Set<Player> set = new HashSet<>();
+set.add(new Player("Big Easy", "Showman"));
+set.add(new Player("Buckets", "Guard"));
+set.add(new Player("Dizzy", "Guard"));
+
+list.add(new Team("Harlem", "Globetrotters", set));
+list.add(new Team("Washington","Generals",null));
+
+teamRepository.save(list);
+}
+```
+
+23. Guarda todo tu trabajo. Reinicia la aplicación. Abre [http://localhost:8080/teams](http://localhost:8080/teams) para ver los players.
+
+**Part 6 - Agregar Spring Data REST**
+
+24. Abre el archivo POM. Agrega una dependencia para el grupo org.springframework.boot y artifact spring-boot-starter-data-rest. Guarda tu trabajo.
+
+25. Abre TeamRepository. Agrega una anotación @RestResource(path="teams", rel="team") a la interface.
+
+26. Crea una nueva Interface denominada "PlayerRepository". Haz que extienda de CrudRepository<Player,Long>. Agrega un @RestResource(path="players", rel="player") a la interface.
+
+27. Abre TeamController. Comenta la anotación @RestController de la clase. (Usaremos Spring Data REST para implementar el controller, así que no deseamos que haya interferencias entre las dos).
+
+28. Guarda todo tu trabajo. Reinicia la aplicación. Abre [http://localhost:8080/teams](http://localhost:8080/teams) para ver los players. Observa que puedes navegar con los links de players y teams.
+
+**Part 7 (Opcional) - Explorar los endpoints Actuator**
+
+29. Una de las dependencias que escogimos fue Actuator. Este nos permite agregar algunos útiles endpoints a nuestras aplicaciones web. Por defecto, tenemos los siguientes:
+
+- [/actuator/info](http://localhost:8080/actuator/info)
+- [/actuator/health](http://localhost:8080/actuator/health)
+
+30. Existen otros endpoints que no estan habilitados, si deseas hacerlo, visita este URL para que veas como hacerlo ahora en Spring Boot 2.X:
+
+[Actuator para Spring Boot 2.X](https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-features.html)
+
+**Part 8 (Opcional) - DevTools**
+
+33. Cuando desarrollamos necesitamos ejecutar/detener constantemente nuestra aplicación, hacer algunos cambios, luego reiniciar. La dependencia Spring Boot "DevTools" puede reiniciar automaticamente cuando se detecta algunos cambios:
+
+```
+  <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-devtools</artifactId>
+      <optional>true</optional>
+  </dependency>
+```
+
+34. Para que trabaje con Intellij IDEA sugiero sigas estos pasos:
+
+[Habilitar DevTools en Intellij IDEA](https://dev.to/suin/spring-boot-developer-tools-how-to-enable-automatic-restart-in-intellij-idea-1c6i)
+
+Después de eso, realizar algunos cambios en tus controladoras y verifica los cambios en tu navegador o respuesta JSON sin necesidad de parar y volver a ejecutar la aplicación. ¿Que te parece esta característica?. Cool no?.
