@@ -4,7 +4,7 @@
 
 1. Crear un nuevo Spring Boot application.  Colocarle el nombre "lab-3-server”, y usar este valor para el Artifact.  Usa el paquete Jar y la última versión de Java.  Usa una versión de Boot > 2.2.x.   No seleccionar ninguna dependencia.
 
-1. Edita el archivo POM (o Gradle).  Agrega una sección “Dependency Management”  (despues de <properties>, antes de <dependencies>) para identificar el spring cloud parent POM.  "Hoxton.SR1" que es la versión mas reciente y estable (Febrero 2020).  Ejemplo:
+2. Edita el archivo POM (o Gradle).  Agrega una sección “Dependency Management”  (despues de <properties>, antes de <dependencies>) para identificar el spring cloud parent POM.  "Hoxton.SR1" que es la versión mas reciente y estable (Febrero 2020).  Ejemplo:
 
 ```
     <dependencyManagement>
@@ -21,15 +21,15 @@
 ```
 
 
-1. Agrega una dependencia con group "org.springframework.cloud" y artifact "spring-cloud-config-server".  No necesitas especificar una versión -- esto ya esta definido en el spring-cloud-dependencies BOM.
+3. Agrega una dependencia con group "org.springframework.cloud" y artifact "spring-cloud-config-server".  No necesitas especificar una versión -- esto ya esta definido en el spring-cloud-dependencies BOM.
 
-1. Edita la clase Application  (probablemene con el nombre Lab3ServerApplication). Agrega la anotación @EnableConfigServer a esta clase.
+4. Edita la clase Application  (probablemene con el nombre Lab3ServerApplication). Agrega la anotación @EnableConfigServer a esta clase.
 
-1. Crea un nuevo repositorio en GitHub para guardar los archivos de configuración de datos.  Llama al repositorio "ConfigData" o escoge el nombre que quieras. Anota el URI de el repositorio, lo necesitaras para el siguiente paso.
+5. Crea un nuevo repositorio en GitHub para guardar los archivos de configuración de datos.  Llama al repositorio "ConfigData" o escoge el nombre que quieras. Anota el URI de el repositorio, lo necesitaras para el siguiente paso.
 
-1. Agregar un nuevo archivo a tu repositorio GitHub denominado "lab-3-client.yml” (o lab-3-client.properties).  Agrega una llave denominada "lucky-word" y un valor de  "Spiderman", "Batman", "Ironman", o cualquier otro valor que quieras.
+6. Agregar un nuevo archivo a tu repositorio GitHub denominado "lab-3-client.yml” (o lab-3-client.properties).  Agrega una llave denominada "lucky-word" y un valor de  "Spiderman", "Batman", "Ironman", o cualquier otro valor que quieras.
 
-1. Regresa al proyecto, crea un archivo application.yml (o application.properties) en la raiz de tu classpath (src/main/resources es lo recomendado).  Agrega la llave "spring.cloud.config.server.git.uri" y el valor "https://github.com/"TU-GITHUB-ID"/ConfigData", sustituye el valor Github ID  y nombre del repositorio como tu lo necesites. Configura el “server.port” a 8001.
+7. Regresa al proyecto, crea un archivo application.yml (o application.properties) en la raiz de tu classpath (src/main/resources es lo recomendado).  Agrega la llave "spring.cloud.config.server.git.uri" y el valor "https://github.com/"TU-GITHUB-ID"/ConfigData", sustituye el valor Github ID  y nombre del repositorio como tu lo necesites. Configura el “server.port” a 8001.
 
 8. Ejecuta la aplicación.  Abre el URL [http://localhost:8001/lab-3-client/default/](http://localhost:8001/lab-3-client/default/).  Deberíamos ver el JSON resultante que será usando por Spring.  Si el servidor no esta trabajando, revisa los pasos previos para encontrar el problema antes de continuar.
 
