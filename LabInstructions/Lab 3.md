@@ -1,10 +1,10 @@
-## Lab 3 - Create a Spring Cloud Config Server and Client
+## Lab 3 - Crear un Spring Cloud Config Server y Cliente
 
 **Part 1 - Config Server:**
 
-1. Create a new Spring Boot application.  Name the project "lab-3-server”, and use this value for the Artifact.  Use Jar packaging and the latest versions of Java.  Use a version of Boot > 1.5.x.   No need to select any dependencies.
+1. Crear un nuevo Spring Boot application.  Colocarle el nombre "lab-3-server”, y usar este valor para el Artifact.  Usa el paquete Jar y la última versión de Java.  Usa una versión de Boot > 2.2.x.   No seleccionar ninguna dependencia.
 
-1. Edit the POM (or Gradle) file.  Add a “Dependency Management” section (after <properties>, before <dependencies>) to identify the spring cloud parent POM.  "Dalston.RELEASE" is the most recent stable version at the time of this writing, but you can use the latest stable version available.  Example:
+1. Edita el archivo POM (o Gradle).  Agrega una sección “Dependency Management”  (despues de <properties>, antes de <dependencies>) para identificar el spring cloud parent POM.  "Hoxton.SR1" que es la versión mas reciente y estable (Febrero 2020).  Ejemplo:
 
 ```
     <dependencyManagement>
@@ -12,7 +12,7 @@
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
-                <version>Dalston.RELEASE</version>
+                <version>Hoxton.SR1</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -21,46 +21,46 @@
 ```
 
 
-1. Add a dependency for group "org.springframework.cloud" and artifact "spring-cloud-config-server".  You do not need to specify a version -- this is already defined in the spring-cloud-dependencies BOM.
+1. Agrega una dependencia con group "org.springframework.cloud" y artifact "spring-cloud-config-server".  No necesitas especificar una versión -- esto ya esta definido en el spring-cloud-dependencies BOM.
 
-1. Edit the main Application class (probably named Lab3ServerApplication).  Add the @EnableConfigServer to this class.
+1. Edita la clase Application  (probablemene con el nombre Lab3ServerApplication). Agrega la anotación @EnableConfigServer a esta clase.
 
-1. Create a new repository on GitHub to hold your application configuration data.  Call the repository "ConfigData" or a name of your choosing.  Note the full URI of the repository, you will need this in a following step.
+1. Crea un nuevo repositorio en GitHub para guardar los archivos de configuración de datos.  Llama al repositorio "ConfigData" o escoge el nombre que quieras. Anota el URI de el repositorio, lo necesitaras para el siguiente paso.
 
-1. Add a new file to your GitHub repository called "lab-3-client.yml” (or lab-3-client.properties).  Add a key called "lucky-word" and a value of "Irish", "Rabbit's Foot", "Serendipity", or any other value of your choosing.
+1. Agregar un nuevo archivo a tu repositorio GitHub denominado "lab-3-client.yml” (o lab-3-client.properties).  Agrega una llave denominada "lucky-word" y un valor de  "Spiderman", "Batman", "Ironman", o cualquier otro valor que quieras.
 
-1. Back in your project, create an application.yml (or application.properties) file in the root of your classpath (src/main/resources recommended).  Add the key "spring.cloud.config.server.git.uri" and the value "https://github.com/"YOUR-GITHUB-ID"/ConfigData", substituting the value for Github ID and repository name as needed.  Also set the “server.port” to 8001.
+1. Regresa al proyecto, crea un archivo application.yml (o application.properties) en la raiz de tu classpath (src/main/resources es lo recomendado).  Agrega la llave "spring.cloud.config.server.git.uri" y el valor "https://github.com/"TU-GITHUB-ID"/ConfigData", sustituye el valor Github ID  y nombre del repositorio como tu lo necesites. Configura el “server.port” a 8001.
 
-8. Run the application.  Open the URL [http://localhost:8001/lab-3-client/default/](http://localhost:8001/lab-3-client/default/).  You should see the JSON result that will actually be used by Spring.  If the server is not working, review the prior steps to find the issue before moving on.
+8. Ejecuta la aplicación.  Abre el URL [http://localhost:8001/lab-3-client/default/](http://localhost:8001/lab-3-client/default/).  Deberíamos ver el JSON resultante que será usando por Spring.  Si el servidor no esta trabajando, revisa los pasos previos para encontrar el problema antes de continuar.
 
-  **Part 2 - Config Client:**
+  **Part 2 - Configurar Cliente:**
 
-9. Create a new, separate Spring Boot application.  Use a version of Boot > 1.5.x.  Name the project "lab-3-client", and use this value for the Artifact.  Add the web dependency.  You can make this a JAR or WAR project, but the instructions here will assume JAR.
+9. Crea un nuevo, proyecto Spring Boot application.  Usa una versión de Boot > 2.2.x.  Denomina al proyecto "lab-3-client", y usa esta valor para el Artifact.  Agrega la dependencia web.  Tu puedes hacer este un JAR o WAR, pero las instrucciones son para trabajar con un JAR.
 
-10.  Open the POM (or Gradle) file and add a “Dependency Management” section (after <properties>, before <dependencies>) to identify the spring cloud parent pom. (You could simply change the parent entries, but most clients will probably be ordinary applications with their own parents):
+10.  Abre el archivo POM (o Gradle) y agrega una sección “Dependency Management” (despues de <properties>, antes de <dependencies>) para identificar el spring cloud parent pom:
 ```
     <dependencyManagement>
         <dependencies>
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
-                <version>Dalston.RELEASE</version>
+                <version>Hoxton.SR1</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
 ```
-11.  Add a dependency for group "org.springframework.cloud" and artifact "spring-cloud-starter-config”.  You do not need to specify a version -- this is already defined in the parent pom in the dependency management section.
+11.  Agrega una dependencia con group "org.springframework.cloud" y artifact "spring-cloud-starter-config”.  Tu no necesitas especificar una versión -- esto ya esta definido en el  parent pom en la sección dependency management.
 
-12. Add a bootstrap.yml (or bootstrap.properties) file in the root of your classpath (src/main/resources recommended).  Add the following key/values using the appropriate format:
+12. Agrega un archivo bootstrap.yml (o bootstrap.properties) en el root de tu classpath (src/main/resources recommended).  Agrega los siguientes key/values usando el formato apropiado:
 spring.application.name=lab-3-client
 spring.cloud.config.uri=http://localhost:8001  
 server.port=8002
 
-    _(Note that this file must be "boostrap" -- not "application" -- so that it is read early in the application startup process.  The server.port could be specified in either file, but the URI to the config server affects the startup sequence.)_
+    _(Ojo que este archivo debe tener como nombre "boostrap" -- no "application" -- de forma que sea leido en primer lugar en el proceso startup de la aplicación.  El server.port puede ser especificado en este archivo, pero, el URI a el config server afectará la secuencia de startup.)_
 
-13. Add a REST controller to obtain and display the lucky word:
+13. Agrega un REST controller para obtener y mostrar el lucky word:
 
     ```
     @RestController
@@ -75,15 +75,15 @@ server.port=8002
     }
     ```
 
-14.  Start your client.  Open [http://localhost:8002/lucky-word](http://localhost:8002/lucky-word).  You should see the lucky word message in your browser.
+14.  Inicia tu cliente.  Abre [http://localhost:8002/lucky-word](http://localhost:8002/lucky-word).  Tu deberías ver el mensaje lucky word en tu navegador.
 
   **BONUS - Profiles:**
 
-15. Create a separate file in your GitHub repository called "lab-3-client-northamerica.yml” (or .properties).  Populate it with the "lucky-word" key and a different value than used in the original file.
+15. Crea un archivo separado en tu repositorio GitHub denominado "lab-3-client-northamerica.yml” (o .properties).  Llena este con el key "lucky-word" y con un diferente valor.
 
-16. Stop the client application.  Modify the boostrap file to contain a key of spring.profiles.active: northamerica.  Save, and restart your client.  Access the URL.  Which lucky word is displayed?  (You could also run the application with -Dspring.profiles.active=northamerica rather than changing the bootstrap file)
+16. Deten la aplicación cliente.  Modifica el archivo  boostrap para que contenga el  key spring.profiles.active: northamerica.  Guarda, y reinicia tu cliente.  Accede a el  URL.  ¿Qué lucky word es mostrado?  (Tu puedes ejecutar la application con -Dspring.profiles.active=northamerica en lugar de cambiar el archivo bootstrap)
 
 ### Reflection:  
-1. Notice that the client needed some dependencies for Spring Cloud, and the URI of the Spring Cloud server, but no code.
-2. What happens if the Config Server is unavailable when the “lucky word” application starts?  To mitigate this possibility, it is common to run multiple instances of the config server in different racks / zones behind a load balancer.
-3. What happens if we change a property after client applications have started?  The server picks up the changes immediately, but the client does not.  Later we will see how Spring Cloud Bus and refresh scope can be used to dynamically propagate changes.
+1. Observa que el client necesita algunas dependencias para Spring Cloud, y el URI de el Spring Cloud server, pero sin codigo.
+2. ¿Que sucede si el Config Server no esta disponible cuando la aplicación “lucky word” inicia?  Para mitigar esa posibilidad, es común ejecutar múltiples instancias de  config server en diferentes racks / zonas detras de un balanceador de carga.
+3. ¿Qué sucede si nosotros cambiamos un property despues que la aplicación cliente ha iniciado?  El server toma los cambios inmediatamente, pero, el cliente no.  Más adelante veremos como Spring Cloud Bus y refresh scope puede ser usado para propagar los cambios dinamicamente.

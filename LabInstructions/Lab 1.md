@@ -36,7 +36,7 @@
 
 **Part 2 - Retornar un RESTful Response**
 
-9.  Crea una nueva clase llamada "Team" en el paquete base. Crea las siguientes propiedades o atributos: Long id, String name, location, y mascot (o las propiedades que desees). Genera los "getters and setters" para todos los campos. Salva tu trabajo.
+9.  Crea una nueva clase llamada "Team" en el subpaquete model. Crea las siguientes propiedades o atributos: Long id, String name, location, y mascot (o las propiedades que desees). Genera los "getters and setters" para todos los campos. Salva tu trabajo.
 
 10. Crea una nueva Controladora denominada "TeamController". Anota esta con @RestController.
 
@@ -94,7 +94,7 @@ team.setLocation("Washington");
 team.setName("Generals");
 list.add(team);
 
-teamRepository.save(list);
+teamRepository.saveAll(list);
 }
 ```
 
@@ -144,7 +144,7 @@ set.add(new Player("Dizzy", "Guard"));
 list.add(new Team("Harlem", "Globetrotters", set));
 list.add(new Team("Washington","Generals",null));
 
-teamRepository.save(list);
+teamRepository.saveAll(list);
 }
 ```
 
