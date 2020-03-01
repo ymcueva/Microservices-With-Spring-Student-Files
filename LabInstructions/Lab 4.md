@@ -59,20 +59,19 @@ spring:
 
 10. Crea un application.yml (o properties) en la raiz de tu classpath (src/main/resources recomendado).  Agrega los siguientes key / values (usa correcto formato YAML):
 
-  ```
+```
 
 ---
-# Items that apply to ALL profiles:
+
 eureka:
   client:
     serviceUrl:
       defaultZone: http://eurekahost:8010/eureka/      (eurekahost -> localhost, puedes configurarlo en tu host)
 
-# Select any available port if neither port nor server port are specified.      
+
 server:
   port: ${PORT:${SERVER_PORT:0}}   
 
-# profiles: subject, verb, article, adjective, noun
 
 ---
 spring:
@@ -104,37 +103,35 @@ words: boat,book,vote,seat,backpack,partition,groundhog
 11. Crea un archivo bootstrap.yml (o properties) en la raiz de tu classpath.  Agrega los siguientes key / valores (usa el correcto formato YAML ):
   
     ```
+      ---
+    spring:
+      profiles: subject
+      application:
+        name: lab-4-subject
 
-# profiles: subject, verb, article, adjective, noun
-  ---
-spring:
-  profiles: subject
-  application:
-    name: lab-4-subject
+    ---
+    spring:
+      profiles: verb
+      application:
+        name: lab-4-verb
 
----
-spring:
-  profiles: verb
-  application:
-    name: lab-4-verb
+    ---
+    spring:
+      profiles: article
+      application:
+        name: lab-4-article
 
----
-spring:
-  profiles: article
-  application:
-    name: lab-4-article
+    ---
+    spring:
+      profiles: adjective
+      application:
+        name: lab-4-adjective
 
----
-spring:
-  profiles: adjective
-  application:
-    name: lab-4-adjective
-
----
-spring:
-  profiles: noun
-  application:
-    name: lab-4-noun
+    ---
+    spring:
+      profiles: noun
+      application:
+        name: lab-4-noun
 
       ```
 
