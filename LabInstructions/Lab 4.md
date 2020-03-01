@@ -1,14 +1,14 @@
-## Lab 4 - Create a Spring Cloud Eureka Server and Client
+## Lab 4 - Crear un Servidor Spring Cloud Eureka y Cliente
 
-**Part 1, create server**
+**Parte 1, crear servidor**
 
-1. Create a new Spring Boot application.
-  - Name the project "lab-4-eureka-server”, and use this value for the Artifact.  
-  - Use JAR packaging and the latest versions of Java.  
-  - Boot version 1.5.x is the most recent at the time of this writing, but you can use the latest stable version available.  
-  - No need to select any dependencies.
+1. Crear un nuevo Spring Boot application.
+  - Colocarle como nombre de proyecto "lab-4-eureka-server”, y usa este valor para el Artifact.  
+  - Usa packaging JAR y la última versión de Java
+  - Versión de Boot  2.2.X o la última disponible
+  - No selecciones ninguna dependencia.
 
-2. Edit the POM (or Gradle) file.  Add a “Dependency Management” section (after <properties>, before <dependencies>) to identify the spring cloud parent POM.  "Dalston.RELEASE" is the most recent stable version at the time of this writing, but you can use the latest stable version available.  Example:
+2. Edita el archivo POM (o Gradle).  Agrega una sección “Dependency Management” (despues de <properties>, antes de <dependencies>) para identificar el spring cloud parent POM.  "Hoxton.SR1" que actualmente es la versión más reciente. Ejemplo:
 
 ```
     <dependencyManagement>
@@ -16,7 +16,7 @@
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
-                <version>Dalston.RELEASE</version>
+                <version>Hoxton.SR1</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -24,136 +24,256 @@
     </dependencyManagement>
 ```
 
-3. Add a dependency for group "org.springframework.cloud" and artifact "spring-cloud-starter-eureka-server".  You do not need to specify a version -- this is already defined in the parent project.  
+3. Agrega una dependencia con group "org.springframework.cloud" y artifact "spring-cloud-starter-netflix-eureka-server".  No se necesita especificar una versión -- eso ya esta definido en el proyecto padre.
 
-4. Save an application.yml (or properties) file in the root of your classpath (src/main/resources recommended).  Add the following key / values (use correct YAML formatting):
-  - server.port: 8010
+4. Crea un application.yml (o properties) en la raiz de tu classpath (src/main/resources es lo recomendado).  Agrega los siguientes key/valor (usa el correcto formato YAML):
+  ```
+server:
+  port: 8010
+  ```
 
-5. (optional) Save a bootstrap.yml (or properties) file in the root of your classpath.  Add the following key / values (use correct YAML formatting):
-  - spring.application.name=lab-4-eureka-server
+5. (Opcional) Crea un bootstrap.yml (o properties) en la raiz de tu classpath.  Agrega los siguientes key / valores (usa el correcto formato YAML):
+  ```
+spring:
+  application:
+    name: lab-4-eureka-server
+  ```
 
-6. Add @EnableEurekaServer to the Application class.  Save.  Start the server.  Temporarily ignore the warnings about running a single instance (i.e. connection refused, unable to refresh cache, backup registry not implemented, etc.).  Open a browser to [http://localhost:8010](http://localhost:8010) to see the server running.
+6. Agrega @EnableEurekaServer a la clase Application.  Guarda tu trabajo.  Inicia el servidor.  Temporalmente ignora las advertencias, acerca de ejecutar una simple instancia (i.e. connection refused, unable to refresh cache, backup registry not implemented, etc.).  Abre un navegador y ve a [http://localhost:8010](http://localhost:8010) para ver al servidor ejecutandose.
 
-    **Part 2, create clients**  
+**Parte 2, crea los clientes**  
     
-    In this next section we will create several client applications that will work together to compose a sentence.  The sentence will contain a subject, verb, article, adjective and noun such as “I saw a leaky boat” or “You have the reasonable book”.  5 services will randomly generate the word components, and a 6th service will assemble them into a sentence.
+    En esta sección crearemos aplicaciones clientes que trabajaran juntos para componener una oración (sentence).  La oración contendrá un subject, verb, article, adjective y noun como:  “I saw a leaky boat” o “You have the reasonable book”.  5 servicios generarán aleatoriamente las palabras correspondientes, y un 6th servicio las ensamblara todas para generar una oración.
 
-7. Create a new Spring Boot web application.  
-  - Name the project "lab-4-subject”, and use this value for the Artifact.  
-  - Use JAR packaging and the latest versions of Java.  
-  - Use Boot version 1.5.x or the latest stable version available.  
-  - Add actuator and web as a dependencies.
+7. Crea un nuevo Spring Boot web application.  
+  - Coloca como nombre de proyecto "word-client”, y usa esta valor para el Artifact.  
+  - Usa JAR packaging y la última versión de Java 
+  - Usa  Boot version 2.2.x o la última versión disponible
+  - Agrega actuator y web como dependencias.
 
-8. Modify the POM (or Gradle) file.  
-  - Add the same dependency management section you inserted into the server POM.  (You could simply change the parent entries, but most clients will probably be ordinary applications with their own parents.)
-  - Add a dependency for group "org.springframework.cloud" and artifact "spring-cloud-starter-eureka".
+8. Modifica el archivo (o Gradle).  
+  - Agrega la misma sección dependency management que insertaste en el POM del servidor.  
+  - Agrega una dependencia con group "org.springframework.cloud" y artifact "spring-cloud-starter-netflix-eureka-client".
 
-9. Modify the Application class.  Add @EnableDiscoveryClient.
+9. Modifica la clase Application.  Agrega @EnableEurekaClient.
 
-10. Save an application.yml (or properties) file in the root of your classpath (src/main/resources recommended).  Add the following key / values (use correct YAML formatting):
-  - eureka.client.serviceUrl.defaultZone=http://localhost:8010/eureka/
-  - words=I,You,He,She,It
-  - server.port=${PORT:${SERVER_PORT:0}}
-(this will cause a random, unused port to be assigned if none is specified)
+10. Crea un application.yml (o properties) en la raiz de tu classpath (src/main/resources recomendado).  Agrega los siguientes key / values (usa correcto formato YAML):
 
-11. Save a bootstrap.yml (or properties) file in the root of your classpath.  Add the following key / values (use correct YAML formatting):
-  - spring.application.name=lab-4-subject
-
-12. Add a Controller class
-  - Place it in the 'demo' package or a subpackage of your choice.
-  - Name the class anything you like.  Annotate it with @RestController.
-  - Add a String member variable named “words”.  Annotate it with @Value("${words}”).
-  - Add the following method to serve the resource (optimize this code if you like):
-  ```
-    @RequestMapping("/")
-    public @ResponseBody String getWord() {
-      String[] wordArray = words.split(",");
-      int i = (int)Math.round(Math.random() * (wordArray.length - 1));
-      return wordArray[i];
-    }
   ```
 
-13. Repeat steps 7 thru 12 (copy the entire project if it is easier), except use the following values:
-  - Name of application: “lab-4-verb”
-  - spring.application.name: “lab-4-verb”
-  - words: “ran,knew,had,saw,bought”
+---
+# Items that apply to ALL profiles:
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://eurekahost:8010/eureka/      (eurekahost -> localhost, puedes configurarlo en tu host)
 
-14. Repeat steps 7 thru 12, except use the following values:
-  - Name of application: “lab-4-article”
-  - spring.application.name: “lab-4-article”
-  - words: “a,the”
+# Select any available port if neither port nor server port are specified.      
+server:
+  port: ${PORT:${SERVER_PORT:0}}   
 
-15. Repeat steps 7 thru 12, except use the following values:
-  - Name of application: “lab-4-adjective”
-  - spring.application.name: “lab-4-adjective”
-  - words: “reasonable,leaky,suspicious,ordinary,unlikely”
+# profiles: subject, verb, article, adjective, noun
 
-16. Repeat steps 7 thru 12, except use the following values:
-  - Name of application: “lab-4-noun”
-  - spring.application.name: “lab-4-noun”
-  - words: “boat,book,vote,seat,backpack,partition,groundhog”
+---
+spring:
+  profiles: subject
+words: I,You,He,She,It
 
-17. Create a new Spring Boot web application.  
-  - Name the application “lab-4-sentence”, and use this value for the Artifact.  
-  - Use JAR packaging and the latest versions of Java and Boot.  
-  - Add actuator and web as a dependencies.  
-  - Alter the POM (or Gradle) just as you did in step 8. 
+---
+spring:
+  profiles: verb
+words: ran,knew,had,saw,bought
 
-18. Add @EnableDiscoveryClient to the Application class.  
+---
+spring:
+  profiles: article
+words: a,the
 
-19. Save an application.yml (or properties) file in the root of your classpath (src/main/resources recommended).  Add the following key / values (use correct YAML formatting):
-  - eureka.client.serviceUrl.defaultZone=http://localhost:8010/eureka/
-  - server.port: 8020
+---
+spring:
+  profiles: adjective
+words: reasonable,leaky,suspicious,ordinary,unlikely
 
-20. Add a Controller class to assemble and return the sentence:
-  - Name the class anything you like.  Annotate it with @RestController.
-  - Use @Autowired to obtain a DiscoveryClient (import from Spring Cloud).
-  - Add the following methods to serve the sentence based on the words obtained from the client services. (feel free to optimize / refactor this code as you like:
-  ```
-    @RequestMapping("/sentence")
-    public @ResponseBody String getSentence() {
-      return 
-        getWord("LAB-4-SUBJECT") + " "
-        + getWord("LAB-4-VERB") + " "
-        + getWord("LAB-4-ARTICLE") + " "
-        + getWord("LAB-4-ADJECTIVE") + " "
-        + getWord("LAB-4-NOUN") + "."
-        ;
-    }
-    
-    public String getWord(String service) {
-      List<ServiceInstance> list = client.getInstances(service);
-      if (list != null && list.size() > 0 ) {
-        URI uri = list.get(0).getUri();
-	if (uri !=null ) {
-	  return (new RestTemplate()).getForObject(uri,String.class);
-	}
-      }
-      return null;
-    }
+---
+spring:
+  profiles: noun
+words: boat,book,vote,seat,backpack,partition,groundhog
+
   ```
 
-21. Run all of the word services and sentence service.  (Run within your IDE, or build JARs for each one (mvn clean package) and run from the command line (java -jar name-of-jar.jar), whichever you find easiest).  (If running from STS, uncheck “Enable Live Bean support” in the run configurations).  Since each service uses a separate port, they should be able to run side-by-side on the same computer.  Open [http://localhost:8020/sentence](http://localhost:8020/sentence) to see the completed sentence.  Refresh the URL and watch the sentence change.
- 	
-  **BONUS - Refactor to use Spring Cloud Config Server.**  
-
-  We can use Eureka together with the config server to eliminate the need for each client to be configured with the location of the Eureka server
-
-22. Add a new file to your GitHub repository (the same repository used in the last lab) called “application.yml” (or properties).  Add the following key / values (use correct YAML formatting):
-  - eureka.client.serviceUrl.defaultZone=http://localhost:8010/eureka/ 
-
-23. Open the common-config-server project.  This is essentially the same config server that you produced in lab 3.  Alter the application.yml to point to your own github repository.  Save all and run this server.  (You can use it as the config server for almost all of the remaining labs in this course.)  
-
-24. Edit each client application’s application.properties file.  Remove the eureka client serviceUrl defaultZone key/value.  We will get this from the config server.
-
-25. In each client project, add the following key/value to bootstrap.yml (or bootstrap.properties), using correct YAML formatting: 
-  - spring.cloud.config.uri: http://localhost:8001.
+11. Crea un archivo bootstrap.yml (o properties) en la raiz de tu classpath.  Agrega los siguientes key / valores (usa el correcto formato YAML ):
   
-26. Add an additional dependency for spring-cloud-config-client. 
+    ```
 
-27. Make sure the Eureka server is still running.  Start (or restart) each client. Open [http://localhost:8020/sentence](http://localhost:8020/sentence) to see the completed sentence.
+# profiles: subject, verb, article, adjective, noun
+  ---
+spring:
+  profiles: subject
+  application:
+    name: lab-4-subject
 
-28. If you like, you can experiment with moving the “words” properties to the GitHub repository so they can be served up by the config server.  You’ll need to use separate profile sections within the file (yml) or files with names that match the application names (yml or properties).  A single application.yml file would look something like this:
+---
+spring:
+  profiles: verb
+  application:
+    name: lab-4-verb
+
+---
+spring:
+  profiles: article
+  application:
+    name: lab-4-article
+
+---
+spring:
+  profiles: adjective
+  application:
+    name: lab-4-adjective
+
+---
+spring:
+  profiles: noun
+  application:
+    name: lab-4-noun
+
+      ```
+
+12. Agrega una clase Controler
+  - Colocale en el paquete o subpaquete que desees.
+  - Coloca el nombre de la clase que tu desees. Sugiero WordController, y anota este con @RestController.
+  - Agrega una propiedad de tipo String denominada “words”.  Anota esta con @Value("${words}”).
+  - Agrega el siguiente método para servir el recurso:
+
+  ```
+@RestController
+public class WordController {
+
+  @Value("${words}")
+  String words;
+
+  @GetMapping("/")
+  public String getWorkds(){
+    String[] wordArray = words.split(",");
+    int i = (int)Math.round(Math.random() * (wordArray.length - 1));
+    return wordArray[i];
+  }
+}
+
+  ```
+
+13. Agrega @EnableEurekaClient a la clase Application.
+
+
+14. Crea un nuevo Spring Boot web application.  
+  - Coloca como nombre de proyecto "sentence", y usa esta valor para el Artifact.  
+  - Usa JAR packaging y la última versión de Java 
+  - Usa  Boot version 2.2.x o la última versión disponible
+  - Agrega actuator y web como dependencias.
+
+15. Modifica el archivo (o Gradle).  
+  - Agrega la misma sección dependency management que insertaste en el POM del servidor.  
+  - Agrega una dependencia con group "org.springframework.cloud" y artifact "spring-cloud-starter-netflix-eureka-client".
+
+16. Modifica la clase Application.  Agrega @EnableEurekaClient.
+
+
+19. Crea un archivo application.yml (o properties) en la raiz de tu classpath (src/main/resources recomendado).  Agrega los siguientes key / valores (usa el correcto formato YAML):
+
+  ```
+---
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://eurekahost:8010/eureka/  (eurekahost -> localhost, puedes configurarlo en tu host)
+
+---
+spring:
+  profiles: sentence
+server:
+  port: 8020
+words: NotApplicable
+
+  ```
+
+20. Crea un bootstrap.yml con el siguiente contenido:
+
+  ```
+---
+spring:
+  profiles:
+    active: sentence
+  application:
+    name: lab-4-sentence
+
+  ```
+
+21. Agrega una clase Controller para ensamblar y retornar la sentencia:
+  - Colocale como nombre de clase SentenceController y anotala con @RestController.
+  - Usa @Autowired para obtener un DiscoveryClient (importar de Spring Cloud).
+  - Agrega el siguiente código para construir la sentencia usando las palabras obtenidas de los servicios cliente:
+
+  ```
+  @GetMapping("/sentence")
+  public String getSentence(){
+
+    return String.format("%s %s %s %s %s.",
+        getWord("LAB-4-SUBJECT"),
+        getWord("LAB-4-VERB"),
+        getWord("LAB-4-ARTICLE"),
+        getWord("LAB-4-ADJECTIVE"),
+        getWord("LAB-4-NOUN") );
+  }
+
+  private String getWord(String applicationName) {
+    List<ServiceInstance> list = client.getInstances(applicationName);
+    if (list != null && list.size() > 0 ) {
+      URI uri = list.get(0).getUri();
+      if (uri !=null ) {
+        return (new RestTemplate()).getForObject(uri,String.class);
+      }
+    }
+    return null;
+  }
+  ```
+
+22. Ejecuta todos los servicios word-client y servicio sentence.  (Ejecutalos con tu IDE, o con los jars construidos (mvn clean package) y ejecutalo desde la linea de comando (java -jar name-of-jar.jar), cualquiera de las formas que tu veas conveniente).  Puesto que cada servicio usa un puerto diferente, ellos deberían poder ejecutarse sin problemas en el mismo computador.  Abre [http://localhost:8020/sentence](http://localhost:8020/sentence) para ver la sentencia completa.  Refresh the URL and watch the sentence change.
+
+
+ 	
+  **BONUS - Refactorizar para usar Spring Cloud Config Server.**  
+
+  
+  Podemos usar Eureka junto con el config server para eliminar la necesidad de que cada cliente configure la ubicación del servidor Eureka.
+  
+
+
+1. Agrega un nuevo archivo a tu repositorio GitHub (el mismo repositorio usado en el laboratorio anterior) denominado “application.yml” (o properties).  Agrega el siguiente key / valor:
+
+  ```
+  eureka:
+    client:
+      serviceUrl:
+        defaultZone: http://eurekahost:8010/eureka/
+
+  ```
+
+2. Abre el proyecto config-server de la carpeta common.  Es el mismo que obtuvimos del lab 3.  Modifica el application.yml para apuntar a tu propio repositorio github.  Guarda todo y ejecuta este servidor.  (Este será el config server para los siguientes laboratorios)  
+
+3. Edita el application.properties o application.yml de cada proyecto cliente.  Elimina el eureka client serviceUrl defaultZone key/valor.  Nosotros obtendremos este del config server.
+
+4. En cada proyecto cliente, agrega el sigiente key/valor al bootstrap.yml (o bootstrap.properties): 
+  
+    ```
+      spring:
+        cloud:
+          config:
+            uri: http://localhost:8001
+    ```
+5. Agrega una dependencia adicional para spring-cloud-config-client. 
+
+6. Asegurate que el Eureka server aun se este ejecutandose.  Inicia (o reinicia) cada cliente. Abre [http://localhost:8020/sentence](http://localhost:8020/sentence) para ver la sentencia completa.
+
+7. Si gustas, puedes mover las propiedades “words” al repositorio GitHub para ver como ellas pueden ser servidas por el config server.  Un simple application.yml luciría así:
 
   ```
   ---
@@ -182,41 +302,37 @@
   words: boat,book,vote,seat,backpack,partition,groundhog  
   ```
 
-  **BONUS - Refactor to use multiple Eureka Servers**  
+  **BONUS - Refactorizar para usar multiples Eureka Servers**  
     
-  To make the application more fault tolerant, we can run multiple Eureka servers.  Ordinarily we would run copies on different racks / data centers, but to simulate this locally do the following:
+  Para hacer aplicaciones más tolerantes a fallas, nosotros podemos ejecutar múltiples servidores Eureka.  En la vida real deberíamos poder ejecutar varias copias en diferentes racks / data centers, pero para simular eso, haremos lo siguiente:
 
-29.  Stop all of the running applications.
+8.  Deten todos los servicios ejecutandose.
 
-30.  Edit your computer's /etc/hosts file (c:\WINDOWS\system32\drivers\etc\hosts on Windows).  Add the following lines and save your work:
+9.  Edita el archivo de tu computadora /etc/hosts (c:\WINDOWS\system32\drivers\etc\hosts en Windows).  Agrega la siguientes lineas y guarda tu trabajo:
 
   ```
   # START section for Microservices with Spring Course
+  127.0.0.1       eurekahost
   127.0.0.1       eureka-primary
   127.0.0.1       eureka-secondary
   127.0.0.1       eureka-tertiary
   # END section for Microservices with Spring Course
   ```
 
-31.  Within the lab-4-server project, add application.yml with multiple profiles:
-primary, secondary, tertiary.  The server.port value should be 8011, 8012, and 8013 respectively.  The eureka.client.serviceUrl.defaultZone for each profile should point to the "eureka-*" URLs of the other two; for example the primary value should be: http://eureka-secondary:8012/eureka/,http://eureka-tertiary:8013/eureka/
+10.  En el proyecto eureka-server, agrega un application.yml con multiples profiles:
 
-32.  Run the application 3 times, using -Dspring.profiles.active=primary (and secondary, and tertiary) to activate the relevant profile.  The result should be 3 Eureka servers which communicate with each other.
-
-33.  In your GitHub project, modify the application.properties eureka.client.serviceUrl.defaultZone to include the URIs of all three Eureka servers (comma-separated, no spaces).
-
-34.  Start all clients.  Open [http://localhost:8020/sentence](http://localhost:8020/sentence) to see the completed sentence.
-
-35.  To test Eureka’s fault tolerance, stop 1 or 2 of the Eureka instances.  Restart 1 or 2 of the clients to ensure they have no difficulty finding Eureka.  Note that it may take several seconds for the clients and servers to become fully aware of which services are up / down.  Make sure the sentence still displays.
+primary, secondary, tertiary.  El valor del server.port debería ser 8011, 8012, y 8013 respectivamente.  El eureka.client.serviceUrl.defaultZone para cada profile deberia apuntar al "eureka-*" URLs de los otros dos; por ejemplo, el valor primary debería ser: http://eureka-secondary:8012/eureka/,http://eureka-tertiary:8013/eureka/
 
 
-**Reflection:**  There are a number of remaining issues with the current application which can be addressed.
 
-1. These services contain duplicated code.  This was done only to make the instructions straightforward.  You can easily implement this system using a single ‘word’ server which selects different words based on a @Profile.  (This is done in the solution)
 
-2. What happens if one of the “word” servers is down?  Right now our entire application will fail.  We will improve this later when we discuss circuit breakers with Hystrix.
+11.  Ejecuta la aplicación 3 veces, usando -Dspring.profiles.active=primary (y secondary, y tertiary) para activar el profile en cuestión.  El resultado debería ser 3 Eureka servers comunicandose unos a otros.
 
-3. To improve performance, can we run each of the calls in parallel?  We will improve this later when discussing Ribbon and Hystrix.
+12.  En tu proyecto GitHub, modifica el application.properties eureka.client.serviceUrl.defaultZone para incluir los URIs de los otros tres Eureka servers (separado por comas, no espacios).
 
-4. We will see an alternative to the RestTemplate when we discuss Feign.
+13.  Inicia todos los clientes.  Abre [http://localhost:8020/sentence](http://localhost:8020/sentence) para ver la sentencia completa.
+
+14.  Para testear Eureka’s fault tolerance, deten el 1 o 2 de las instancias Eureka.  Reinicia 1 o 2 de los clientes para asegurarte de que ellos no tienen dificultades para encontrar al  Eureka que se esta ejecutando. 
+
+
 
